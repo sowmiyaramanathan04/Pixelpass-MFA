@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OTP Steganography</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #555;
+            margin-top: 30px;
+        }
+
+        /* Container for buttons */
+        .container {
+            width: 400px;
+            background: white;
+            padding: 20px;
+            margin: auto;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Style the buttons */
+        button {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        /* File Input Styling */
+        input[type="file"] {
+            margin: 10px 0;
+            display: block;
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #fff;
+        }
+
+        /* Form styling */
+        form {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Steganography OTP Generator</h1>
+        
+        <form id="generateForm" action="/generate_otp" method="POST">  
+            <button type="submit">Generate OTP</button>
+        </form>
+
+        <h2>Retrieve OTP</h2>
+        <form id="uploadForm" action="/extract_otp" method="POST" enctype="multipart/form-data">
+            <input type="file" name="file" accept="image/png" required>
+            <button type="submit">Extract OTP</button>
+        </form>
+        
+        
+      <!-- OTP Image -->
+      <img id="otpImage" src="{{ url_for('static', filename='otp_images/secret_otp.png') }}" 
+      alt="OTP Image" 
+      data-timestamp="{{ session.get('otp_timestamp', 0) }}" 
+      style="display: none;"> <!-- ✅ Hides the image -->
+<p id="timerDisplay"></p>
+
+<script>
+    let timerInterval;
+
+    // Function to start a 3-minute timer
+    function startTimer(durationInSeconds) {
+        clearInterval(timerInterval); // Clear existing timer if any
+        const timerDisplay = document.getElementById("timerDisplay");
+        let timeLeft = durationInSeconds;
+
+        timerInterval = setInterval(() => {
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+
+            timerDisplay.innerText = `Expires in: ${minutes}m ${seconds}s`;
+
+            if (timeLeft <= 0) {
+                clearInterval(timerInterval);
+                timerDisplay.innerText = "⚠ OTP Expired!";
+            }
+
+            timeLeft--;
+        }, 1000);
+    }
+
+    // Start timer when OTP is generated
+    document.getElementById("generateForm").addEventListener("submit", function () {
+        localStorage.setItem("otpTimerStart", Date.now());  // Optional if using session later
+        startTimer(180);  // 3 minutes = 180 seconds
+    });
+
+    // Stop timer when extracting OTP
+    document.getElementById("uploadForm").addEventListener("submit", function () {
+        clearInterval(timerInterval);
+        document.getElementById("timerDisplay").innerText = "OTP Verification in Progress...";
+    });
+</script>
+    </div>
+</body>
+</html>
