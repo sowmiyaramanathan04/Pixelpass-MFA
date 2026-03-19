@@ -139,5 +139,5 @@ Implemented OTP encryption (Fernet) and LSB steganography
 Developed Flask backend logic and security validation
 
 Integrated metadata tampering detection
----------------------------------------------------------
+
 Note: Team project—code reflects my primary contributions to authentication and OTP mechanisms.
