@@ -96,8 +96,8 @@ Create virtual environment:
 
 bash
 python -m venv venv
-# Windows: venv\Scripts\activate
-# macOS/Linux: source venv/bin/activate
+ Windows: venv\Scripts\activate
+ macOS/Linux: source venv/bin/activate
 Install dependencies:
 
 bash
