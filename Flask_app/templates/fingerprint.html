@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fingerprint Authentication</title>
+    <script>
+        let interval = setInterval(() => {
+          fetch('/verify_fingerprint')
+            .then(response => response.json())
+            .then(data => {
+              console.log(data); // Optional: see the response in browser console
+              if (data.status === 'MATCHED') {
+                clearInterval(interval); // Stop polling
+                alert("Fingerprint verified!");
+      
+                // Now call your steganography function or redirect
+                window.location.href = "/steganography"; // This triggers Flask route
+              } else if (data.status === 'NOT_MATCHED') {
+                // Optional: show some message
+                console.log("Fingerprint not matched");
+              }
+            })
+            .catch(error => {
+              console.error('Error:', error);
+            });
+        }, 3000); // Check every 3 seconds
+      </script>
+</head>
+<body>
+    <h2>Please place your finger on the scanner...</h2>
+</body>
+</html>
